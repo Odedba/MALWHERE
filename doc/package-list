@@ -1,0 +1,9 @@
+main.project
+main.project.gui
+main.project.obfuscation.tests
+main.project.svm.features
+workshop.tools
+workshop.tools.closure.compiler
+workshop.tools.deobfuscator
+workshop.tools.js.beautifier
+workshop.tools.svm.mal.js.detector

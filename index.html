@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script language="javascript" type="text/javascript">
+<!--
+document.write = function(c){ alert('INFO: DOCUMENT_WRITE: '+c); };
+document.writeln = function(c){ alert('INFO: DOCUMENT_WRITELN: '+c); };
+document.createElement = function(c){ alert('INFO: CREATE_ELEMENT: '+c); return c;};
+eval = function(c){ alert('INFO: EVAL: '+c); return c; };
+setTimeout = function(a,b){ alert('INFO: SET_TIMEOUT: '+a); };
+encodeURIComponent = function(c){ alert('INFO: ENCODE_URI_COMPONENT: '+c); return c;};
+window.prompt = function(c){ return c; };
+document.getElementById = function(c){ alert('INFO: DOCUMENT_GET_ELEMENT_BY_ID: '+c); return new Object();};
+function aaaaaaaaa3(){div}
+aaaaaaaaa3();
+//-->
+</script>
+</body>
+</html>

