@@ -6,7 +6,7 @@ JavaScript code deobfuscation and malware detection
 
 USAGE: 
 
-Run src\main\project\gui\MainGUIFrame.java or the exported MALWHERE.jar to use with a GUI, 
+Run src\main\project\gui\MainGUIFrame.java or the exported MALWHERE.jar to use with a GUI,
 Or run using the command line at src\main\project\console\CommandLine.java
 
 
