@@ -12,8 +12,8 @@ or run using the command line at src\main\project\console\CommandLine.java
 
 IMPORTANT:
 
-In order to run this application, root directory must contain the ".problem" file which holds the information needed to
-Create the model for the support vector machine. If you wish to create your own ".problem" using a new training set of
+In order to run this application the root directory must contain the ".problem" file which holds the information needed to
+Create the model by the support vector machine. If you wish to create your own ".problem" using a new training set of
 JavaScript files, delete the existing ".problem" file and add the following to the root directory:
 - A directory named "training" with 3 sub directories: "benign_set", "malicious_set", and "suspicious_set".
 - The "benign_set" directory should contain all JavaScript example files that are known to be benign.
